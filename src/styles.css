@@ -174,3 +174,25 @@ body {
 .scene-list-name {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+/* Builder link */
+.builder-link {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.builder-link:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+}

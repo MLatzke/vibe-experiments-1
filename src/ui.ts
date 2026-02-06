@@ -23,6 +23,8 @@ export function createUI(container: HTMLElement, director: Director) {
     <div class="scene-list" hidden>
       <div class="scene-list-inner"></div>
     </div>
+
+    <a class="builder-link" href="builder.html">Builder</a>
   `
 
   const prevBtn = container.querySelector<HTMLButtonElement>(".nav-prev")!
