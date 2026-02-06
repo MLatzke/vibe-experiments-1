@@ -10,6 +10,24 @@ const PALETTE: [number, number, number][] = [
   [240, 139, 123], // #F08B7B coral (loop back)
 ]
 
+/** Deterministic hash for a grid cell — stable across frames. */
+function hash(col: number, row: number, seed: number): number {
+  let h = (col * 374761393 + row * 668265263 + seed * 1274126177) | 0
+  h = ((h ^ (h >> 13)) * 1103515245) | 0
+  h = (h ^ (h >> 16)) | 0
+  return (h >>> 0) / 0xffffffff // 0–1
+}
+
+/** Returns [TL, TR, BR, BL] — true = convex, false = concave. */
+function cornerConfig(col: number, row: number): boolean[] {
+  return [
+    hash(col, row, 0) > 0.45,
+    hash(col, row, 1) > 0.45,
+    hash(col, row, 2) > 0.45,
+    hash(col, row, 3) > 0.45,
+  ]
+}
+
 function lerpColor(t: number, brightness: number): string {
   const clamped = ((t % 1) + 1) % 1
   const scaled = clamped * (PALETTE.length - 1)
@@ -76,7 +94,7 @@ function drawTile(
   ctx.fill()
 }
 
-/** Full-screen grid of interlocking brand shapes with a radial color pulse. */
+/** Full-screen grid of random interlocking brand shapes with a radial color pulse. */
 export function createBrandGridScene(): Scene {
   let elapsed = 0
 
@@ -99,10 +117,10 @@ export function createBrandGridScene(): Scene {
       ctx.fillStyle = "#1E1E24"
       ctx.fillRect(0, 0, w, h)
 
-      const tileSize = Math.max(48, Math.min(w, h) / 10)
-      const gap = tileSize * 0.06
+      const tileSize = Math.max(60, Math.min(w, h) / 8)
+      const gap = tileSize * 0.05
       const s = tileSize - gap
-      const r = s * 0.4
+      const r = s * 0.48
 
       const cols = Math.ceil(w / tileSize) + 2
       const rows = Math.ceil(h / tileSize) + 2
@@ -125,11 +143,7 @@ export function createBrandGridScene(): Scene {
           const dist = Math.sqrt((tileCx - cx) ** 2 + (tileCy - cy) ** 2)
           const normDist = dist / maxDist
 
-          // Alternating corner pattern: concave/convex checkerboard
-          const even = (col + row) % 2 === 0
-          const corners = even
-            ? [false, true, false, true]
-            : [true, false, true, false]
+          const corners = cornerConfig(col, row)
 
           // Base color from radial position
           const baseT = normDist * 0.7
