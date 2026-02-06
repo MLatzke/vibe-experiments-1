@@ -8,6 +8,16 @@ export function createUI(container: HTMLElement, director: Director) {
       </svg>
     </button>
 
+    <button class="nav-btn nav-pause" aria-label="Pause auto-advance">
+      <svg class="pause-icon" width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+        <rect x="4" y="3" width="3.5" height="12" rx="1"/>
+        <rect x="10.5" y="3" width="3.5" height="12" rx="1"/>
+      </svg>
+      <svg class="play-icon" width="18" height="18" viewBox="0 0 18 18" fill="currentColor" style="display:none">
+        <path d="M5 3.5L14 9L5 14.5V3.5Z"/>
+      </svg>
+    </button>
+
     <div class="scene-indicator">
       <button class="scene-counter" aria-label="Open scene list">
         <span class="scene-num">1</span><span class="scene-sep">/</span><span class="scene-total">1</span>
@@ -29,6 +39,9 @@ export function createUI(container: HTMLElement, director: Director) {
 
   const prevBtn = container.querySelector<HTMLButtonElement>(".nav-prev")!
   const nextBtn = container.querySelector<HTMLButtonElement>(".nav-next")!
+  const pauseBtn = container.querySelector<HTMLButtonElement>(".nav-pause")!
+  const pauseIcon = container.querySelector<SVGElement>(".pause-icon")!
+  const playIcon = container.querySelector<SVGElement>(".play-icon")!
   const counterBtn = container.querySelector<HTMLButtonElement>(".scene-counter")!
   const sceneNum = container.querySelector<HTMLSpanElement>(".scene-num")!
   const sceneTotal = container.querySelector<HTMLSpanElement>(".scene-total")!
@@ -37,6 +50,14 @@ export function createUI(container: HTMLElement, director: Director) {
 
   prevBtn.addEventListener("click", () => director.prev())
   nextBtn.addEventListener("click", () => director.next())
+  pauseBtn.addEventListener("click", togglePause)
+
+  function togglePause() {
+    const paused = director.isAutoAdvancing
+    director.setAutoAdvance(!paused)
+    pauseIcon.style.display = paused ? "none" : ""
+    playIcon.style.display = paused ? "" : "none"
+  }
 
   counterBtn.addEventListener("click", () => {
     const isOpen = !sceneList.hidden
@@ -78,6 +99,9 @@ export function createUI(container: HTMLElement, director: Director) {
     } else if (e.key === "ArrowLeft") {
       e.preventDefault()
       director.prev()
+    } else if (e.key === "p" || e.key === "P") {
+      e.preventDefault()
+      togglePause()
     } else if (e.key === "Escape") {
       sceneList.hidden = true
     }

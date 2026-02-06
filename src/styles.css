@@ -67,6 +67,12 @@ body {
   right: 24px;
 }
 
+/* Pause button */
+.nav-pause {
+  left: 50%;
+  transform: translateX(calc(-50% - 56px));
+}
+
 /* Scene indicator / counter */
 .scene-indicator {
   position: fixed;

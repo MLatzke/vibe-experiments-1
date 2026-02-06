@@ -95,6 +95,10 @@ export class Director {
     this.transitionDuration = durationMs
   }
 
+  get isAutoAdvancing() {
+    return this.autoAdvance
+  }
+
   setAutoAdvance(on: boolean) {
     this.autoAdvance = on
   }
